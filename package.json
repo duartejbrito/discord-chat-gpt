@@ -1,0 +1,25 @@
+{
+  "name": "discord-chat-gpt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duartejbrito/discord-chat-gpt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duartejbrito/discord-chat-gpt/issues"
+  },
+  "homepage": "https://github.com/duartejbrito/discord-chat-gpt#readme",
+  "dependencies": {
+    "discord.js": "^14.9.0",
+    "dotenv": "^16.0.3",
+    "openai": "^4.0.0"
+  }
+}
