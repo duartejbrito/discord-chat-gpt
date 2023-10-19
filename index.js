@@ -70,21 +70,21 @@ client.on('messageCreate', async (message) => {
 
         const messageContent = result.choices[0].message.content;
 
-        splitStringByLimit(messageContent, 2000).forEach((m) => {
-            result.choices[0].message.content = m;
+        // splitStringByLimit(messageContent, 2000).forEach((m) => {
+        //     result.choices[0].message.content = m;
 
-            if (message.guild === null) {
-                message.author.send(result.choices[0].message);
-            } else {
-                message.reply(result.choices[0].message);
-            }
-        });
+        //     if (message.guild === null) {
+        //         message.author.send(result.choices[0].message);
+        //     } else {
+        //         message.reply(result.choices[0].message);
+        //     }
+        // });
 
-        // if (message.guild === null) {
-        //     message.author.send(result.choices[0].message);
-        // } else {
-        //     message.reply(result.choices[0].message);
-        // }
+        if (message.guild === null) {
+            message.author.send(result.choices[0].message);
+        } else {
+            message.reply(result.choices[0].message);
+        }
 
     } catch (error) {
         logMessage(`ERR: ${error}`);
