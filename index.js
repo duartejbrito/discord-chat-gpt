@@ -1,5 +1,5 @@
 require('dotenv/config');
-const { Client, IntentsBitField } = require('discord.js');
+const { Client, IntentsBitField, Partials, MessageType, GuildMember } = require('discord.js');
 const { OpenAI } = require('openai');
 
 const client = new Client({
@@ -7,14 +7,23 @@ const client = new Client({
         IntentsBitField.Flags.Guilds,
         IntentsBitField.Flags.GuildMessages,
         IntentsBitField.Flags.MessageContent,
-    ] 
+        IntentsBitField.Flags.DirectMessages,
+    ],
+    partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
 
 client.on('ready', () => {
-    console.log('Bot is ready!');
-    console.log(`OpenAi API Key: ${process.env.OPENAI_API_KEY}`);
-    console.log(`Discord Token: ${process.env.TOKEN}`);
-    console.log(`Channel ID: ${process.env.CHANNEL_ID}`);
+    logMessage('Bot is ready!');
+    logMessage('================================================================================');
+    logMessage(`OpenAi API Key: ${process.env.OPENAI_API_KEY}`);
+    logMessage(`OpenAi Model ID: ${process.env.OPENAI_MODEL_ID}`);
+    logMessage(`OpenAi Start Message: ${process.env.OPENAI_START_MESSAGE}`);
+    logMessage('================================================================================');
+    logMessage(`Discord Token: ${process.env.TOKEN}`);
+    logMessage(`Channel ID: ${process.env.CHANNEL_ID}`);
+    logMessage(`Guild ID: ${process.env.GUILD_ID}`);
+    logMessage(`Role ID: ${process.env.ROLE_ID}`);
+    logMessage('================================================================================');
 });
 
 const openai = new OpenAI({
@@ -22,11 +31,22 @@ const openai = new OpenAI({
 });
 
 client.on('messageCreate', async (message) => {
+    const guild = await client.guilds.fetch(process.env.GUILD_ID);
+    const member = await guild.members.fetch(message.author.id)
+        .then((member) => {
+            return member;
+        })
+        .catch(() => {
+            return null;
+        });
+    const hasPermission = member !== null ? member.roles.cache.has(process.env.ROLE_ID) : false;
+
     if (message.author.bot) return;
-    if (message.channel.id !== process.env.CHANNEL_ID) return;
+    if (message.guild !== null && message.channel.id !== process.env.CHANNEL_ID) return;
+    if (message.guild === null && !hasPermission) return;
     if (message.content.startsWith('!')) return;
 
-    let conversationLog = [{ role: 'system', content: 'You are a friendly chatbot.' }];
+    let conversationLog = [{ role: 'system', content: process.env.OPENAI_START_MESSAGE }];
 
     try {
         await message.channel.sendTyping();
@@ -39,18 +59,28 @@ client.on('messageCreate', async (message) => {
         });
 
         const result = await openai.chat.completions.create({
-            model: 'gpt-3.5-turbo',
+            model: process.env.OPENAI_MODEL_ID,
             messages: conversationLog,
         })
         .catch((error) => {
-            console.log(`ERR: ${error}`);
+            logMessage(`ERR: ${error}`);
         });
 
-        message.reply(result.choices[0].message);
+        logMessage(`Author: "${member.displayName}", Message: "${message.content}", Is Private: ${message.guild === null}, Bot Reply: "${result.choices[0].message.content}"`);
+
+        if (message.guild === null) {
+            message.author.send(result.choices[0].message);
+        } else {
+            message.reply(result.choices[0].message);
+        }
 
     } catch (error) {
-        console.log(`ERR: ${error}`);
+        logMessage(`ERR: ${error}`);
     }
 });
 
 client.login(process.env.TOKEN);
+
+function logMessage(message) {
+    console.log(`[${new Date().toLocaleString()}] ${message}`);
+}
