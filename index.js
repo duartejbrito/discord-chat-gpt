@@ -1,5 +1,5 @@
 require('dotenv/config');
-const { Client, IntentsBitField, Partials } = require('discord.js');
+const { Client, IntentsBitField, Partials, Utils } = require('discord.js');
 const { OpenAI } = require('openai');
 
 const client = new Client({
@@ -69,12 +69,20 @@ client.on('messageCreate', async (message) => {
         logMessage(`Author: "${member.displayName}", Message: "${message.content}", Is Private: ${message.guild === null}, Bot Reply: "${result.choices[0].message.content}"`);
 
         splitStringByLimit(result.choices[0].message.content, 2000).forEach((m) => {
+            result.choices[0].message.content = m;
+
             if (message.guild === null) {
-                message.author.send(m);
+                message.author.send(result.choices[0].message);
             } else {
-                message.reply(m);
+                message.reply(result.choices[0].message);
             }
         });
+
+        // if (message.guild === null) {
+        //     message.author.send(result.choices[0].message);
+        // } else {
+        //     message.reply(result.choices[0].message);
+        // }
 
     } catch (error) {
         logMessage(`ERR: ${error}`);
