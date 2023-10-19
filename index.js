@@ -68,7 +68,9 @@ client.on('messageCreate', async (message) => {
 
         logMessage(`Author: "${member.displayName}", Message: "${message.content}", Is Private: ${message.guild === null}, Bot Reply: "${result.choices[0].message.content}"`);
 
-        splitStringByLimit(result.choices[0].message.content, 2000).forEach((m) => {
+        const messageContent = result.choices[0].message.content;
+
+        splitStringByLimit(messageContent, 2000).forEach((m) => {
             result.choices[0].message.content = m;
 
             if (message.guild === null) {
