@@ -12,6 +12,9 @@ const client = new Client({
 
 client.on('ready', () => {
     console.log('Bot is ready!');
+    console.log(`OpenAi API Key: ${process.env.OPENAI_API_KEY}`);
+    console.log(`Discord Token: ${process.env.TOKEN}`);
+    console.log(`Channel ID: ${process.env.CHANNEL_ID}`);
 });
 
 const openai = new OpenAI({
@@ -29,7 +32,6 @@ client.on('messageCreate', async (message) => {
         await message.channel.sendTyping();
 
         const prevMessages = await message.channel.messages.fetch({ limit: 15 });
-        // prevMessages = prevMessages.filter((m) => m.author.id === client.user.id);
         prevMessages.reverse();
 
         prevMessages.forEach((m) => {
