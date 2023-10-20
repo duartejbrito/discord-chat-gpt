@@ -2,8 +2,9 @@
   "name": "discord-chat-gpt",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/bot.ts",
   "scripts": {
+    "start": "ts-node src/bot.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,8 +19,11 @@
   },
   "homepage": "https://github.com/duartejbrito/discord-chat-gpt#readme",
   "dependencies": {
+    "@types/node": "^20.8.7",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
-    "openai": "^4.0.0"
+    "openai": "^4.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
