@@ -1,0 +1,9 @@
+{
+    "TOKEN": "",
+    "OPENAI_API_KEY": "",
+    "OPENAI_MODEL_ID": "gpt-3.5-turbo",
+    "OPENAI_START_MESSAGE": "You are a friendly chatbot.",
+    "CHANNEL_ID": "",
+    "GUILD_ID": "",
+    "ROLE_ID": ""
+}

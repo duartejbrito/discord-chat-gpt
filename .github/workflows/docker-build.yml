@@ -66,3 +66,8 @@ jobs:
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Invoke deployment hook
+        uses: joelwmale/webhook-action@2.3.2
+        with:
+          url: ${{ secrets.WEBHOOK_URL }}
