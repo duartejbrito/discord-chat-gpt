@@ -1,5 +1,5 @@
 require('dotenv/config');
-const { Client, IntentsBitField, Partials, Utils } = require('discord.js');
+const { Client, IntentsBitField, Partials, Events } = require('discord.js');
 const { OpenAI } = require('openai');
 
 const client = new Client({
@@ -12,7 +12,7 @@ const client = new Client({
     partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
 
-client.on('ready', () => {
+client.on(Events.ClientReady, () => {
     logMessage('Bot is ready!');
     logMessage('================================================================================');
     logMessage(`OpenAi API Key: ${process.env.OPENAI_API_KEY}`);
@@ -30,7 +30,7 @@ const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY // This is also the default, can be omitted
 });
 
-client.on('messageCreate', async (message) => {
+client.on(Events.MessageCreate, async (message) => {
     const guild = await client.guilds.fetch(process.env.GUILD_ID);
     const member = await guild.members.fetch(message.author.id)
         .then((member) => {
