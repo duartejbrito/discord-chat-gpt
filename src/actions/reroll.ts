@@ -1,7 +1,7 @@
 import { Client, ButtonInteraction, CacheType } from 'discord.js';
 import { Action, CustomIdContext } from '../action';
 import { createImage, imagesFromBase64Response } from '../utils/openai';
-import { createResponse } from '../utils/discord';
+import { createResponse, handleOpenAIError } from '../utils/discord';
 import { imagineActions } from '../actions';
 
 export const Reroll: Action = {
@@ -40,7 +40,8 @@ export const Reroll: Action = {
       const response = await createResponse(prompt, images, imagineActions(count));
       interaction.followUp({ ...response, content: `Rerolled for <@${uuid}>! 🎲` }).catch(console.error);
     } catch (error) {
-      console.log(error);
+      const response = handleOpenAIError(error, prompt);
+      interaction.editReply({ ...response }).catch(console.error);
     }
   },
 };

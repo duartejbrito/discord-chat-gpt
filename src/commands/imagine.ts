@@ -2,7 +2,7 @@ import { Client, ChatInputCommandInteraction, CacheType, ApplicationCommandType,
 import { Command } from '../command';
 import { DEFAULT_IMAGES, MAX_IMAGES } from '../utils/constants';
 import { createImage, imagesFromBase64Response } from '../utils/openai';
-import { createResponse } from '../utils/discord';
+import { createResponse, handleOpenAIError } from '../utils/discord';
 import { imagineActions } from '../actions';
 
 export const Imagine: Command = {
@@ -43,7 +43,8 @@ export const Imagine: Command = {
       const response = await createResponse(prompt, images, imagineActions(count));
       interaction.followUp({ ...response, content: `<@${uuid}>` }).catch(console.error);
     } catch (error) {
-      console.log(error);
+      const response = handleOpenAIError(error, prompt);
+      interaction.followUp({ ...response }).catch(console.error);
     }
   },
 };

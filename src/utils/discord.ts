@@ -90,3 +90,35 @@ export async function fetchImagesFromComposite(compositeImageData: EmbedImageDat
     return null;
   }
 }
+
+export function handleOpenAIError(error: any, prompt: string): BaseMessageOptions {
+  let result = {};
+
+  const response = error.response;
+  if (response) {
+    if (response.status == 429) {
+      result = {
+        content: `**Something went wrong!** I am slightly overworked.😮‍💨 Please wait a few minutes and I\'ll be good to go!\n Your prompt was: ${prompt}`,
+      };
+    } else if (response.status >= 500 && response.status < 600) {
+      result = {
+        content: `**Something went wrong!** The server is experiencing issues. Please try again later.\n Your prompt was: ${prompt}`,
+      };
+    } else if (response.data && response.data.error) {
+      // custom error keys from the openai api
+      result = {
+        content: `**Something went wrong!** ${response.data.error.message}  (${response.data.error.type}) \n Your prompt was: ${prompt}`,
+      };
+    } else {
+      result = {
+        content: `**Something went wrong!** ${response.statusText}  (${response.status}) \n Your prompt was: ${prompt}`,
+      };
+    }
+  } else {
+    result = {
+      content: `**Something went wrong!** ${error} \n Your prompt was: ${prompt}`,
+    };
+  }
+
+  return result;
+}
