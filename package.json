@@ -21,6 +21,7 @@
   "homepage": "https://github.com/duartejbrito/discord-chat-gpt#readme",
   "dependencies": {
     "@types/node": "^20.8.7",
+    "axios": "^1.5.1",
     "discord.js": "^14.9.0",
     "dotenv": "^16.0.3",
     "openai": "^4.0.0",
