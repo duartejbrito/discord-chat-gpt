@@ -40,4 +40,8 @@ if (!ROLE_ID) {
 
 export const MAX_IMAGES = 4; // the API supports 1 to 10 images per request
 export const DEFAULT_IMAGES = 2; // This is used when no number is given
-export const IMAGE_SIZE: number = 256;
+export const IMAGE_SIZE: number = 1024;
+
+if (![256, 512, 1024].includes(IMAGE_SIZE)) {
+  throw `Invalid IMAGE_SIZE ${IMAGE_SIZE}`;
+}
