@@ -43,6 +43,10 @@ export async function shouldReturn(client: Client<boolean>, message: Message<boo
 }
 
 export async function checkPermissions(client: Client<boolean>, interaction: BaseInteraction): Promise<string | null> {
+  if (!interaction.inGuild()) {
+    return `**Error:** You don't have permission to do that. Try it in the channel <#${CHANNEL_ID}> instead.`;
+  }
+
   const userHasPermission = await hasPermission(client, interaction.user.id);
   if (!userHasPermission) {
     return 'You do not have permission to use this.';

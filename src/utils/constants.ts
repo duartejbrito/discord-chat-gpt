@@ -43,6 +43,7 @@ export const DEFAULT_IMAGES = 2; // This is used when no number is given
 export const IMAGE_SIZE: number = 1024;
 export const EXPAND_ACTION_PADDING = 120; // How many pixels the Expand action adds on each side
 export const EXPAND_ACTION_NUM_IMAGES = 2; // how many images to show for an expand action
+export const VARIATION_ACTION_NUM_IMAGES = 4; // how many images to show for an variation action
 
 if (DEFAULT_IMAGES > MAX_IMAGES) {
   throw `DEFAULT_IMAGES must not be greater than MAX_IMAGES`;

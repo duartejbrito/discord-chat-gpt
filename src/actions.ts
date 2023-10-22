@@ -2,11 +2,12 @@ import { Action } from './action';
 import { Expand } from './actions/expand';
 import { Reroll } from './actions/reroll';
 import { Save } from './actions/save';
+import { Variation } from './actions/variation';
 
-export const Actions: Action[] = [Save, Reroll, Expand];
+export const Actions: Action[] = [Save, Reroll, Expand, Variation];
 
 export function imagineActions(count: number): Action[] {
-  return [Reroll, Save, Expand];
+  return [Reroll, Variation, Save, Expand];
 }
 
 export function expandActions(count: number): Action[] {
