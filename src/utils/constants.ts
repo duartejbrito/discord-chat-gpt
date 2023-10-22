@@ -41,6 +41,12 @@ if (!ROLE_ID) {
 export const MAX_IMAGES = 4; // the API supports 1 to 10 images per request
 export const DEFAULT_IMAGES = 2; // This is used when no number is given
 export const IMAGE_SIZE: number = 1024;
+export const EXPAND_ACTION_PADDING = 120; // How many pixels the Expand action adds on each side
+export const EXPAND_ACTION_NUM_IMAGES = 2; // how many images to show for an expand action
+
+if (DEFAULT_IMAGES > MAX_IMAGES) {
+  throw `DEFAULT_IMAGES must not be greater than MAX_IMAGES`;
+}
 
 if (![256, 512, 1024].includes(IMAGE_SIZE)) {
   throw `Invalid IMAGE_SIZE ${IMAGE_SIZE}`;

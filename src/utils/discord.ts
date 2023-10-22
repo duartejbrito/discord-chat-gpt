@@ -1,8 +1,22 @@
-import { ActionRowBuilder, AttachmentBuilder, BaseInteraction, BaseMessageOptions, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, EmbedImageData, Message } from 'discord.js';
+import {
+  ActionRow,
+  ActionRowBuilder,
+  AttachmentBuilder,
+  BaseInteraction,
+  BaseMessageOptions,
+  ButtonBuilder,
+  ButtonStyle,
+  Client,
+  EmbedBuilder,
+  EmbedImageData,
+  Message,
+  MessageActionRowComponent,
+} from 'discord.js';
 import { CHANNEL_ID, GUILD_ID, ROLE_ID } from './constants';
 import { createTiledComposite, extractImagesFromComposite } from './image';
 import { Action, CustomIdContext } from '../action';
 import axios from 'axios';
+import { Actions } from '../actions';
 
 export async function hasPermission(client: Client<boolean>, userId: string) {
   const guild = await client.guilds.fetch(GUILD_ID);
@@ -89,6 +103,32 @@ export async function fetchImagesFromComposite(compositeImageData: EmbedImageDat
     console.log(error);
     return null;
   }
+}
+
+export function actionsFromRow(row: ActionRow<MessageActionRowComponent>): Action[] {
+  var actions = [];
+  for (const component of row.components) {
+    const customId = component.customId;
+    if (customId) {
+      const action = Actions.find((c) => c.isAction(customId));
+      if (action) {
+        actions.push(action);
+      }
+    }
+  }
+  return actions;
+}
+
+export function rowFromActions(actions: Action[], context: CustomIdContext): ActionRowBuilder<ButtonBuilder> | null {
+  if (actions.length == 0) {
+    return null;
+  }
+  var row = new ActionRowBuilder<ButtonBuilder>();
+  for (const action of actions) {
+    const button = new ButtonBuilder().setCustomId(action.customId(context)).setLabel(action.displayText).setStyle(ButtonStyle.Secondary);
+    row = row.addComponents(button);
+  }
+  return row;
 }
 
 export function handleOpenAIError(error: any, prompt: string): BaseMessageOptions {

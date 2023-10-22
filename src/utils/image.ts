@@ -1,5 +1,5 @@
 import sharp, { OverlayOptions } from 'sharp';
-import { IMAGE_SIZE } from './constants';
+import { EXPAND_ACTION_PADDING, IMAGE_SIZE } from './constants';
 
 export async function createTiledComposite(imageBuffers: Buffer[]): Promise<Buffer> {
   const finalCompositeSize = Math.ceil(Math.sqrt(imageBuffers.length));
@@ -42,4 +42,19 @@ export async function extractImagesFromComposite(composite: Buffer, compositeWid
   }
 
   return images;
+}
+
+export async function expandImage(buffer: Buffer): Promise<Buffer> {
+  const result = await sharp(buffer)
+    .extend({
+      top: EXPAND_ACTION_PADDING,
+      bottom: EXPAND_ACTION_PADDING,
+      left: EXPAND_ACTION_PADDING,
+      right: EXPAND_ACTION_PADDING,
+      background: { r: 0, g: 0, b: 0, alpha: 0 },
+    })
+    .resize(IMAGE_SIZE)
+    .png()
+    .toBuffer();
+  return result;
 }

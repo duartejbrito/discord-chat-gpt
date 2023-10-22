@@ -1,5 +1,5 @@
-import OpenAI from 'openai';
-import { IMAGE_SIZE, OPENAI_API_KEY, OPENAI_MODEL_ID, OPENAI_START_MESSAGE } from './constants';
+import OpenAI, { toFile } from 'openai';
+import { EXPAND_ACTION_NUM_IMAGES, IMAGE_SIZE, OPENAI_API_KEY, OPENAI_MODEL_ID, OPENAI_START_MESSAGE } from './constants';
 import { ChatCompletionCreateParamsNonStreaming, ChatCompletionMessageParam } from 'openai/resources/chat';
 import { logMessage } from '.';
 import { ImagesResponse } from 'openai/resources';
@@ -42,6 +42,17 @@ export function createImage(prompt: string, numImages: number) {
   return openai.images.generate({
     prompt: prompt,
     n: numImages,
+    response_format: 'b64_json',
+    size: OPENAI_API_SIZE_ARG,
+  });
+}
+
+export async function createImageEdit(image: Buffer, prompt: string) {
+  let finalImage = await toFile(image, 'image.png');
+  return openai.images.edit({
+    image: finalImage,
+    prompt: prompt,
+    n: EXPAND_ACTION_NUM_IMAGES,
     response_format: 'b64_json',
     size: OPENAI_API_SIZE_ARG,
   });
