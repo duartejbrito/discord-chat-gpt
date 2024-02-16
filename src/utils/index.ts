@@ -6,7 +6,7 @@ export function splitStringByLimit(str: string, limit: number) {
   let result = [];
   let index = 0;
 
-  while (index < str.length) {
+  while (index < str?.length ?? 0) {
     result.push(str.substring(index, limit));
     index += limit;
   }

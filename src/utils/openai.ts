@@ -20,6 +20,13 @@ export function createChatCompletion(conversationLog: ChatCompletionMessageParam
     } as ChatCompletionCreateParamsNonStreaming)
     .catch((error) => {
       logMessage(`ERR: ${error}`);
+      return {
+        choices: [{
+          message: {
+            content: `ERR: ${error}`
+          }
+        }]
+      };
     });
 }
 
